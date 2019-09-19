@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#### This script uses mysides - https://github.com/mosen/mysides, this script is run as a post flight action after installing a package containing the mysides binary.
+
+sleep 10
+
+#Finds current username and defines a variable
+currentuser=`stat -f "%Su" /dev/console`
+
+# Get the Username of the currently logged user
+loggedInUser=$(/bin/ls -l /dev/console | /usr/bin/awk '{ print $3 }')
+
+
+#Substituting as user stored in variable to modify plist
+#su "$currentuser" -c "<command to run>"
+
+if [ -e /usr/local/bin/mysides ]
+MYSIDES="/usr/local/bin/mysides"
+then
+	$MYSIDES add Applications file:///Applications 
+	$MYSIDES add Desktop file:///Users/$loggedInUser/Music 
+	$MYSIDES add Documents file:///Users/$loggedInUser/Movies 
+	$MYSIDES add Downloads file:///Users/$loggedInUser/Pictures 
+	$MYSIDES add $loggedInUser file:///Users/$loggedInUser 
+	touch /Users/$loggedInUser/.sidebarshortcuts
+fi
+
+#Shows Status Bar
+
+su "$currentuser" -c "defaults write com.apple.finder ShowStatusBar -bool true;"
+
+#Changes Finder to List View
+#Four-letter codes for the other view modes: 'icnv', 'clmv', 'Flwv'
+
+su "$currentuser" -c "defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv'"
+
+#New Finder windows now opens in /Users/<username>
+
+su "$currentuser" -c "defaults write com.apple.finder NewWindowTarget -string 'PfHm'"
+
+#Turns off re-open programs/windows after restart/login/shutdown
+
+su "$currentuser" -c "defaults write com.apple.loginwindow.plist TALLogoutSavesState -bool false"
+
+#Restarts cfprefsd and Finder
+
+killAll cfprefsd
+killAll Finder
+
+echo "Finder Preferences set"
+
+exit 0\
