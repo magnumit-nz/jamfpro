@@ -1,0 +1,41 @@
+#!/bin/bash
+
+##use with https://github.com/kcrawford/dockutil requires building in xcode and creating a package installer to install to /usr/local/bin
+
+echo "running dockutil"
+DOCKUTIL=/usr/local/bin/dockutil
+loggedInUser=$(python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')
+
+
+#Add Apps
+/usr/local/bin/dockutil --move 'App Store' --position 3 --allhomes
+/usr/local/bin/dockutil --remove 'Safari' --allhomes
+/usr/local/bin/dockutil --remove 'Mail' --allhomes
+/usr/local/bin/dockutil --remove 'Contacts' --allhomes
+/usr/local/bin/dockutil --remove 'Calendar' --allhomes
+/usr/local/bin/dockutil --remove 'Notes' --allhomes
+/usr/local/bin/dockutil --remove 'Reminders' --allhomes
+/usr/local/bin/dockutil --remove 'Photos' --allhomes
+/usr/local/bin/dockutil --remove 'Messages' --allhomes
+/usr/local/bin/dockutil --remove 'FaceTime' --allhomes
+/usr/local/bin/dockutil --remove 'iTunes' --allhomes
+/usr/local/bin/dockutil --remove 'iBooks' --allhomes
+/usr/local/bin/dockutil --remove 'Maps' --allhomes
+/usr/local/bin/dockutil --remove 'Pages' --allhomes
+/usr/local/bin/dockutil --remove 'Numbers' --allhomes
+/usr/local/bin/dockutil --remove 'Keynote' --allhomes
+/usr/local/bin/dockutil --remove '~/Downloads' --allhomes
+/usr/local/bin/dockutil --add '/Applications/Google Chrome.app' --allhomes
+/usr/local/bin/dockutil --add '/Applications/Self Service.app' --allhomes
+/usr/local/bin/dockutil --add '/Applications/PCClient.app' --allhomes
+
+#Add Folders
+$DOCKUTIL --add '/Applications' --view grid --display folder --sort name  --section others --position 1 --allhomes --no-restart
+$DOCKUTIL --add '~/Downloads' --view list --display folder --sort dateadded --section others --position end --allhomes --no-restart
+
+$echo "Restarting Dock..."
+$sudo -u $loggedInUser $killall Dock
+
+killall Dock
+
+exit 0
