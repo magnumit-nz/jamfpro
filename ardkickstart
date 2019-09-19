@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Turn on Remote Desktop Sharing, allow access for all users, and enable the menu extra:
+## Turn on Remote Desktop Sharing, allow access for all users:
 sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -allowAccessFor -allUsers -privs -all
 
 ## Restart the ARD Agent and helper:
