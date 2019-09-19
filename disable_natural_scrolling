@@ -1,0 +1,22 @@
+#!/bin/bash
+
+##########
+##### A reboot/log out is required for this setting to take effect. 
+##########
+
+	### Get the Username of the currently logged user
+	loggedInUser=$(stat -f%Su /dev/console)    
+    
+    
+   ########## 
+   ##### Write to ~/Library/Preferences/.GlobalPreferences.plist 
+   ##########
+    
+    ### Disable Natural Scrolling
+    defaults write /Users/$loggedInUser/Library/Preferences/.GlobalPreferences.plist com.apple.swipescrolldirection -bool false
+    
+    ### Chown the .GlobalPreferences.plist file
+    chown $loggedInUser /Users/$loggedInUser/Library/Preferences/.GlobalPreferences.plist
+    
+	  ### Force SystemUIServer to restart
+    /usr/bin/killall -HUP SystemUIServer
