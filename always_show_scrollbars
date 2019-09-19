@@ -1,0 +1,18 @@
+#!/bin/bash
+
+	### Get the Username of the currently logged user
+	loggedInUser=$(stat -f%Su /dev/console)    
+    
+    
+   ########## 
+   ##### Write to ~/Library/.GlobalPreferences.plist 
+   ##########
+    
+    ### Set the preference 
+    defaults write /Users/$loggedInUser/Library/Preferences/.GlobalPreferences.plist AppleShowScrollBars Always
+
+    ### Chown the .GlobalPreferences.plist file
+    chown $loggedInUser /Users/$loggedInUser/Library/Preferences/.GlobalPreferences.plist
+    
+	### Force SystemUIServer to restart
+    /usr/bin/killall -HUP SystemUIServer
