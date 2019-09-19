@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#Turning on location services
+if [[ $locationStatus = 1 ]]; then
+    echo "Location Service is turned on"
+    else
+        echo "Enabling location Service"
+        sudo /usr/bin/defaults write /var/db/locationd/Library/Preferences/ByHost/com.apple.locationd LocationServicesEnabled -int 1
+        if [[ $locationStatus = 1 ]]; then
+            echo "Location Service has been turned on"
+        fi
+fi
