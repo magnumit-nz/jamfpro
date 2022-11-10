@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+logged_in_user=$(scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }')
+user_home=$(dscl . -read /users/$logged_in_user NFSHomeDirectory | cut -d " " -f 2)
+
+sudo -u "$logged_in_user" /usr/bin/defaults write "$user_home"/Library/Preferences/ByHost/com.apple.controlcenter.plist ScreenMirroring -int 18
+sudo -u "$logged_in_user" /usr/bin/defaults write "$user_home"/Library/Preferences/com.apple.airplay.plist showInMenuBarIfPresent -bool true
+
+sudo killall "ControlCenter"
